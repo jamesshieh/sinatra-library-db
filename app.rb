@@ -17,6 +17,10 @@ get '/users' do
   erb :userindex
 end
 
+get '/users/search' do
+  erb :searchuser
+end
+
 get '/users/:id' do
   @user = User.find(params[:id])
   erb :showuser
@@ -39,3 +43,9 @@ end
 get '/subjects/' do
   @subjects = Subject.all
 end
+
+post '/users/search' do
+  @user = User.where("first_name = ? AND last_name = ? AND email = ?", params[:firstname], params[:lastname], params[:email])
+  erb :usersearchresults
+end
+
