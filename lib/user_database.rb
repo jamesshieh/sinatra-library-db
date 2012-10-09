@@ -1,7 +1,3 @@
-require 'sinatra'
-require 'sinatra/activerecord'
-require './db/models.rb'
-
 class UserDatabase
 
   # Create a new user in the user database

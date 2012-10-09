@@ -6,7 +6,6 @@ Manage books (CRUD)
     ID
     Author first 
     Author last
-    Email
     Description
     Tags
     Created Date
@@ -26,20 +25,20 @@ Assign subjects
     Book ID
 
 Users database
-Manage users (CRUD)
-  Create users
-    ID
-    First
-    Last
-    Email
-    Username
-    Password
-    Created Date
-    Updated Date
-  List users
-  Delete users
+Manage users (CRUD)*
+  Create users*
+    ID*
+    First*
+    Last*
+    Email*
+    Username*
+    Password*
+    Created Date*
+    Updated Date*
+  List users*
+  Delete users*
     Check for open transactions and prevent deletion of someone with books checked out
-  Edit users
+  Edit users*
 
 Transaction database
 Open transaction

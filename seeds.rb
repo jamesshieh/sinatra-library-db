@@ -6,20 +6,19 @@ require 'time'
 set :database, 'sqlite3:///database.db'
 
 User.create([
-  { :email => "test1@test.com", :first_name => "test1", :last_name => "test1" },
-  { :email => "test2@test.com", :first_name => "test2", :last_name => "test2" },
-  { :email => "test3@test.com", :first_name => "test3", :last_name => "test3" },
-  { :email => "test4@test.com", :first_name => "test4", :last_name => "test4" },
-  { :email => "test5@test.com", :first_name => "test5", :last_name => "test5" },
-  { :email => "test6@test.com", :first_name => "test6", :last_name => "test6" }
+  { :email => "james.c.shieh@gmail.com", :first_name => "James", :last_name => "Shieh" },
+  { :email => "pikachu@gmail.com", :first_name => "Pikachu", :last_name => "Lightning" },
+  { :email => "squirtle@gmail.com", :first_name => "Squirtle", :last_name => "Water" },
+  { :email => "charmander@gmail.com", :first_name => "Charmander", :last_name => "Fire" },
+  { :email => "bulbasaur@gmail.com", :first_name => "Bulbasaur", :last_name => "Grass" },
 ])
 
 Book.create([
-  { :author_first_name => "test1", :author_last_name => "test1", :title => "test1" },
-  { :author_first_name => "test2", :author_last_name => "test2", :title => "test2" },
-  { :author_first_name => "test3", :author_last_name => "test3", :title => "test3" },
-  { :author_first_name => "test4", :author_last_name => "test4", :title => "test4" },
-  { :author_first_name => "test5", :author_last_name => "test5", :title => "test5" }
+  { :author_first_name => "Ruby", :author_last_name => "Book", :title => "Ruby Book" },
+  { :author_first_name => "Testjava", :author_last_name => "Testbook", :title => "Java Book" },
+  { :author_first_name => "Ruby", :author_last_name => "Book", :title => "Ruby Book" },
+  { :author_first_name => "Testnode", :author_last_name => "Testbook", :title => "Node Book" },
+  { :author_first_name => "Julia", :author_last_name => "Test", :title => "Julea Book" }
 ])
 
 Subject.create([
@@ -31,8 +30,9 @@ Subject.create([
 ])
 
 Transaction.create([
-  { :books_id => 1, :users_id => 1, :open_date => Time.now },
-  { :books_id => 2, :users_id => 6, :open_date => Time.now }
+  { :book_id => 1, :user_id => 1, :open_date => Time.now , :closed_date => Time.now, :active_flag => false},
+  { :book_id => 1, :user_id => 3, :open_date => Time.now },
+  { :book_id => 2, :user_id => 2, :open_date => Time.now }
 ])
 
 Booktag.create([

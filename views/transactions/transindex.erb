@@ -1,0 +1,24 @@
+<h1>Listing Transactions<h1/>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Book ID</th>
+    <th>User ID</th>
+    <th>Active</th>
+    <th>Open Date</th>
+    <th>Closed Date</th>
+  </tr>
+
+<% @transactions.each do |transaction| %>
+  <tr>
+    <td><%= transaction.id %></td>
+    <td><%= transaction.book_id %></td>
+    <td><%= transaction.user_id %></td>
+    <td><%= transaction.active_flag %></td>
+    <td><%= transaction.open_date %></td>
+    <td><%= transaction.closed_date %></td>
+<% end %>
+  </tr>
+</table>
+

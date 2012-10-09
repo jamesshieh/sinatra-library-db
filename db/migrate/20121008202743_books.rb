@@ -5,9 +5,8 @@ class Books < ActiveRecord::Migration
       t.string :author_first_name
       t.string :author_last_name
       t.text :description
-      t.boolean :checked_out_flag, :default => false
 
-      t.timestamp
+      t.timestamps
       end
   end
 
