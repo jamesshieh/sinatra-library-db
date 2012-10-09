@@ -1,7 +1,3 @@
-require 'sinatra'
-require 'sinatra/activerecord'
-require './db/models.rb'
-
 class BookDatabase
 
   # List all books and transaction status

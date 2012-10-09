@@ -4,6 +4,7 @@ require './db/models'
 require './lib/user_database'
 require './lib/book_database'
 require './lib/catalog_database'
+require './lib/transaction_database'
 
 set :database, 'sqlite3:///database.db'
 
@@ -118,12 +119,33 @@ get '/trans/list' do
 end
 
 get '/trans/return' do
+  erb :"transactions/return"
+end
+
+post '/trans/return' do
+  TransactionDatabase.return_book(params[:ti], params[:em])
+  erb :"transactions/checkoutsuccessful"
 end
 
 get '/trans/checkout' do
+  erb :"transactions/showtransaction"
+end
+
+post '/trans/checkout' do
+  TransactionDatabase.checkout_book(params[:ti], params[:em])
+  erb :"transactions/showtransaction"
+end
+
+post 'trans/searchuser' do
+  TransactionDatabase.search_user
+end
+
+post 'trans/searchbook' do
+  TransactionDatabase.search_book
 end
 
 get '/trans/search' do
+  erb :"transactions/search"
 end
 
 get '/subjects/list' do
