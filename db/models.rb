@@ -1,5 +1,7 @@
 class User < ActiveRecord::Base
-  validates_presence_of :first_name
+  validates :first_name,:presence => true
+  validates :email,     :presence => true,
+                        :uniqueness => true
 
   has_many :transaction
 end

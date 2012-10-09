@@ -1,0 +1,19 @@
+<h1>Are you sure you want to delete the User ID: <%= @user.id%></h1>
+<p>
+  <b>First Name:</b>
+  <%= @user.first_name %>
+</p>
+<p>
+  <b>Last Name:</b>
+  <%= @user.last_name %>
+</p>
+<p>
+  <b>Email:</b>
+  <%= @user.email %>
+</p>
+<p>Confirm delete?</p><br />
+<form action="/users/confirmdelete" method="post">
+<input type="hidden" name="id" value=<%= @user.id %>>
+<input type="submit" name="confirm" value="Yes">
+<input type="submit" name="confirm" value="No">
+</form>

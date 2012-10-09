@@ -1,0 +1,65 @@
+Library catalog web implementation:
+
+Books database
+Manage books (CRUD)
+  Create books
+    ID
+    Author first 
+    Author last
+    Email
+    Description
+    Tags
+    Created Date
+    Updated Date
+  List books
+  Delete books
+  Edit books
+
+Subjects database
+Manage subjects
+  ID
+  Subject
+  Description
+Assign subjects
+  Subject x book table?
+    Subject ID
+    Book ID
+
+Users database
+Manage users (CRUD)
+  Create users
+    ID
+    First
+    Last
+    Email
+    Username
+    Password
+    Created Date
+    Updated Date
+  List users
+  Delete users
+    Check for open transactions and prevent deletion of someone with books checked out
+  Edit users
+
+Transaction database
+Open transaction
+  Enter IDs
+Close transaction
+  Flip flag, set date
+Manage Transactions
+  Transaction ID
+  Book ID REFERENCES BOOK
+  User ID REFERENCES USER
+  Active_Flag DEFAULT Y
+  Created Date 
+  Closed Date
+  Updated Date
+
+Ratings?
+Rating table
+  ID
+  Rating
+  Book ID
+Create view:
+  SELECT average(rating), book_id from ratings group by book_id
+  JOIN on book to get average rating
