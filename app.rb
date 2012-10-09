@@ -123,25 +123,25 @@ get '/trans/return' do
 end
 
 post '/trans/return' do
-  TransactionDatabase.return_book(params[:ti], params[:em])
-  erb :"transactions/checkoutsuccessful"
+  @transaction = TransactionDatabase.return_book(params[:ti], params[:em])
+  erb :"transactions/showtrans"
 end
 
 get '/trans/checkout' do
-  erb :"transactions/showtransaction"
+  erb :"transactions/checkout"
 end
 
 post '/trans/checkout' do
-  TransactionDatabase.checkout_book(params[:ti], params[:em])
-  erb :"transactions/showtransaction"
+  @transaction = TransactionDatabase.checkout_book(params[:ti], params[:em])
+  erb :"transactions/showtrans"
 end
 
 post 'trans/searchuser' do
-  TransactionDatabase.search_user
+  @transaction = TransactionDatabase.search_user
 end
 
 post 'trans/searchbook' do
-  TransactionDatabase.search_book
+  @transaction = TransactionDatabase.search_book
 end
 
 get '/trans/search' do
@@ -155,3 +155,4 @@ end
 
 get '/subjects/manage' do
 end
+
