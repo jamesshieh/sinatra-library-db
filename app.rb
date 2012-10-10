@@ -114,7 +114,12 @@ get '/books/edit' do
 end
 
 get '/trans/list' do
-  @transactions = Transaction.all
+  @transactions = TransactionDatabase.get_all_transactions
+  erb :"transactions/transindex"
+end
+
+get '/trans/listactive' do
+  @transactions = TransactionDatabase.get_active_transactions
   erb :"transactions/transindex"
 end
 
@@ -132,16 +137,23 @@ get '/trans/checkout' do
 end
 
 post '/trans/checkout' do
-  @transaction = TransactionDatabase.checkout_book(params[:ti], params[:em])
-  erb :"transactions/showtrans"
+  begin
+    @transaction = TransactionDatabase.checkout_book(params[:ti], params[:em])
+    erb :"transactions/showtrans"
+  rescue
+    puts "Exception!"
+    erb :"/transactions/sorrypage"
+  end
 end
 
-post 'trans/searchuser' do
-  @transaction = TransactionDatabase.search_user
+post '/trans/searchuser' do
+  @transactions = TransactionDatabase.search_user(params[:em])
+  erb :"/transactions/transindex"
 end
 
-post 'trans/searchbook' do
-  @transaction = TransactionDatabase.search_book
+post '/trans/searchbook' do
+  @transactions = TransactionDatabase.search_book(params[:ti])
+  erb :"/transactions/transindex"
 end
 
 get '/trans/search' do
