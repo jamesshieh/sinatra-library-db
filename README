@@ -1,4 +1,32 @@
-Library catalog web implementation:
+Library catalog web implementation on activerecord + sinatra
+
+gem install sinatra
+gem install sinatra-activerecord
+
+To generate a new DB
+
+rake db:migrate
+
+To seed the DB with some premade entries
+
+ruby seeds.rb
+
+To run the server
+
+ruby app.rb
+
+Current functionality:
+Users (CRUD)
+Books (CRUD)
+Transactions
+  Check out
+  Return
+  List
+  Search
+
+#
+
+Table Schema:
 
 Books database
 Manage books (CRUD)
