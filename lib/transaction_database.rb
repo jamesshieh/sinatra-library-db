@@ -33,7 +33,7 @@ class TransactionDatabase
   # Return a book and close transaction
 
   def self.return_book(ti, id)
-    @book = Book.find(:first, :include => :transaction, :conditions => ["transactions.active_flag = 't' AND title = ? AND transactions.user_id = ?", ti, @user.id])
+    @book = Book.find(:first, :include => :transaction, :conditions => ["transactions.active_flag = 't' AND title = ? AND transactions.user_id = ?", ti, id])
     @transaction = Transaction.find(:first, :conditions => ["book_id = ? AND user_id = ? AND active_flag = 't'", @book.id, id])
     Transaction.update(@transaction.id, :active_flag => false, :closed_date => Time.now)
     @transaction = Transaction.find(@transaction.id)

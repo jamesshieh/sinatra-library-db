@@ -177,7 +177,7 @@ end
 post '/trans/return' do
   authorized?
   begin
-    @transaction = TransactionDatabase.return_book(params[:ti], username)
+    @transaction = TransactionDatabase.return_book(params[:ti], current_user.id)
     erb :"transactions/showtrans"
   rescue
     erb :"/transactions/sorrypage"
@@ -192,7 +192,7 @@ end
 post '/trans/checkout' do
   authorized?
   begin
-    @transaction = TransactionDatabase.checkout_book(params[:ti], username)
+    @transaction = TransactionDatabase.checkout_book(params[:ti], current_user.id)
     erb :"transactions/showtrans"
   rescue
     erb :"/transactions/sorrypage"
@@ -221,8 +221,10 @@ helpers do
   end
 
   def current_user
-    if login?
-      User.find(session[:id])
+    if @user
+      @user
+    elsif login?
+      @user = User.find(session[:id])
     else
       nil
     end

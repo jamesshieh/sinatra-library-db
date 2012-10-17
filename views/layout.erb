@@ -5,7 +5,7 @@
     <a href="/users/create">Create a New User</a>
     <a href="/login">Login</a>
   <% else %>
-    "Welcome "<%= current_user.email %>"!"
+    <%="Welcome #{current_user.first_name} #{current_user.last_name}"%>
     <a href="/logout">Logout</a>
   <% end %>
   </head>
