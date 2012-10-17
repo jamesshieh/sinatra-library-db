@@ -48,7 +48,7 @@ post '/login' do
     user.last_name = user_info["last_name"]
     user.email = params[:email]
     if user.save
-      session[:email] = user.email
+      session[:id] = user.id
     else
       redirect to('/login')
     end
