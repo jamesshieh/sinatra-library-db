@@ -252,9 +252,4 @@ helpers do
     unauthorized! unless login?
   end
 
-  def admin?
-    authorized?
-    unauthorized! unless UserDatabase.is_admin?
-  end
-
 end

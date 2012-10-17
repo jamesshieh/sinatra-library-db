@@ -18,13 +18,6 @@ class UserDatabase
     return @user.password == BCrypt::Engine.hash_secret(pw, @user.salt)
   end
 
-  # Admin check
-
-  def is_admin?(un)
-    @user = User.find(:first, :conditions => ["username = ?", un])
-    return @user.admin = 'yes'
-  end
-
   # Edit an existing user in the user database
 
   def self.edit_user(id, fn, ln, em)
@@ -34,13 +27,6 @@ class UserDatabase
     else
       puts "Edit Failed!"
     end
-  end
-
-  # Find user by First/Last
-
-  def self.search_user(fn, ln)
-    @user = User.where("first_name = ? AND last_name = ?", fn, ln)
-    return @user
   end
 
   # Find ID of user by email
