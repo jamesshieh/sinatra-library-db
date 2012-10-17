@@ -26,8 +26,6 @@ class TransactionDatabase
     end
     @user = User.find(:first, :conditions => ["username = ?", un])
     @book = Book.find(:first, :include => :transaction, :conditions => ["(books.id NOT IN (?)) AND title = ?", @missingbooks, ti])
-    puts "user id #{@user.id}"
-    puts @book.id
     @transaction = Transaction.create({ :book_id => @book.id, :user_id => @user.id, :open_date => Time.now })
     return @transaction
   end
