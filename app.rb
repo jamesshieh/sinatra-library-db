@@ -5,6 +5,8 @@ require './lib/user_database'
 require './lib/book_database'
 require './lib/transaction_database'
 require 'debugger'
+require 'json'
+require 'net/http'
 
 set :database, 'sqlite3:///database.db'
 
@@ -31,10 +33,26 @@ get '/login' do
 end
 
 post '/login' do
-  if UserDatabase.authenticate(params[:un], params[:pw])
-    session[:username] = params[:un]
-    redirect to('/index')
-  else
+  auth_uri = URI("https://www.hackerschool.com/auth")
+  auth_response = Net::HTTP.start(auth_uri.host, auth_uri.port, :use_ssl => true) do |http|
+    request = Net::HTTP::Post.new auth_uri.request_uri
+    request.body = "email=#{params[:email]}&password=#{params[:password]}"
+    http.request request
+  end
+  if auth_response.code == "200"
+    user_info = JSON.parse(auth_response.body)
+    user = UserDatabase.find_by_hs_id(user_info[:hs_id])
+    user = User.new unless user
+    user.hs_id = user_info["hs_id"]
+    user.first_name = user_info["first_name"]
+    user.last_name = user_info["last_name"]
+    user.email = params[:email]
+    if user.save
+      session[:email] = user.email
+    else
+      redirect to('/login')
+    end
+  else # 401 error unauthorized
     erb :"failedlogin"
   end
 end

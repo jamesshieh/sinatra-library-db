@@ -11,6 +11,12 @@ class UserDatabase
     @user = User.create({:first_name => fn, :last_name => ln, :email => em, :username => un, :password => pw_hash, :salt => pw_salt})
   end
 
+  # Find user by hs_id
+
+  def self.find_by_hs_id(hs_id)
+    User.find(:first, :conditions => ["hs_id = ?", hs_id])
+  end
+
   # Authentication
 
   def self.authenticate(un, pw)
