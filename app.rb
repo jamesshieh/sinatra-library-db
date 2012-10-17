@@ -32,7 +32,6 @@ end
 
 post '/login' do
   if UserDatabase.authenticate(params[:un], params[:pw])
-    debugger
     session[:username] = params[:un]
     redirect to('/index')
   else
@@ -43,17 +42,6 @@ end
 get '/logout' do
   session[:username] = nil
   redirect '/'
-end
-
-get '/users/list' do
-  authorized?
-  @users = User.all
-  erb :"users/userindex"
-end
-
-get '/users/search' do
-  authorized?
-  erb :"users/searchuser"
 end
 
 get '/users/create' do
@@ -108,22 +96,8 @@ post '/users/edit' do
     @user = User.find(@user.id)
     erb :"users/showuser"
   rescue
-    erb :"users/searcherror"
+    erb :"users/editusererror"
   end
-end
-
-post '/users/searchusername' do
-  begin
-    @user = UserDatabase.find_user(params[:un])
-    erb :"users/showuser"
-  rescue
-    erb :"users/searcherror"
-  end
-end
-
-post '/users/searchname' do
-  @user = UserDatabase.search_user(params[:first_name], params[:last_name])
-  erb :"users/usersearchresults"
 end
 
 get '/books/list' do
@@ -151,7 +125,7 @@ post '/books/searchauthor' do
   begin
     @book = BookDatabase.search_book_author(params[:fn], params[:ln])
     erb :"books/bookindex"
-  rescute
+  rescue
     erb :"books/searcherror"
   end
 end
@@ -181,11 +155,11 @@ get '/trans/return' do
 end
 
 post '/trans/return' do
+  authorized?
   begin
-    @transaction = TransactionDatabase.return_book(params[:ti], session[:username])
+    @transaction = TransactionDatabase.return_book(params[:ti], username)
     erb :"transactions/showtrans"
   rescue
-    puts "Exception!"
     erb :"/transactions/sorrypage"
   end
 end
@@ -196,12 +170,11 @@ get '/trans/checkout' do
 end
 
 post '/trans/checkout' do
+  authorized?
   begin
-    puts session[:username]
-    @transaction = TransactionDatabase.checkout_book(params[:ti], session[:username])
+    @transaction = TransactionDatabase.checkout_book(params[:ti], username)
     erb :"transactions/showtrans"
   rescue
-    puts "Exception!"
     erb :"/transactions/sorrypage"
   end
 end
@@ -218,14 +191,6 @@ end
 
 get '/trans/search' do
   erb :"transactions/search"
-end
-
-get '/subjects/list' do
-  @subjects = Subject.all
-  erb :subjectindex
-end
-
-get '/subjects/manage' do
 end
 
 helpers do
