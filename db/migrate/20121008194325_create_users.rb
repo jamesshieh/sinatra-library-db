@@ -6,6 +6,8 @@ class CreateUsers < ActiveRecord::Migration
       t.string :email
       t.string :username
       t.string :password
+      t.string :salt
+      t.string :admin
 
       t.timestamps
     end

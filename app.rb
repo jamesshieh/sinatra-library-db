@@ -3,33 +3,64 @@ require 'sinatra/activerecord'
 require './db/models'
 require './lib/user_database'
 require './lib/book_database'
-require './lib/catalog_database'
 require './lib/transaction_database'
 
 set :database, 'sqlite3:///database.db'
+
+enable :sessions
 
 get '/' do
   redirect to('/index')
 end
 
 get '/index' do
-  erb :index
+  if login?
+    erb :"index"
+  else
+    redirect('/login')
+  end
+end
+
+get '/login' do
+  if login?
+    redirect('/index')
+  else
+    erb :"login"
+  end
+end
+
+post '/login' do
+  if UserDatabase.authenticate(params[:un], params[:pw])
+    session[:username] = params[:un]
+    redirect('/index')
+  else
+    erb :"failedlogin"
+  end
+end
+
+get '/logout' do
+  session[:username] = nil
+  redirect '/'
 end
 
 get '/users/list' do
+  authorized?
   @users = User.all
   erb :"users/userindex"
 end
 
 get '/users/search' do
+  authorized?
   erb :"users/searchuser"
 end
 
 get '/users/create' do
+  authorized?
   erb :"users/createuser"
 end
 
 get '/users/delete' do
+  admin?
   erb :"users/deleteuser"
 end
 
@@ -55,7 +86,7 @@ post '/users/confirmdelete' do
 end
 
 post '/users/create' do
-  UserDatabase.create_user(params[:first_name], params[:last_name], params[:email])
+  UserDatabase.create_user(params[:first_name], params[:last_name], params[:email], params[:un], params[:pw])
   @user = UserDatabase.find_user(params[:email])
   erb :"users/showuser"
 end
@@ -91,7 +122,7 @@ get '/books/new' do
 end
 
 post '/books/new' do
-  @book = BookDatabase.new_book(params[:ti], params[:fn], params[:ln], params[:descr])
+  @book = BookDatabase.new_book(params[:ti], params[:fn], params[:ln], params[:descr], params[:owner])
   erb :"books/showbook"
 end
 
@@ -168,3 +199,33 @@ end
 get '/subjects/manage' do
 end
 
+helpers do
+
+  # Check if logged in
+  def login?
+    if session[:username].nil?
+      return false
+    else
+      return true
+    end
+  end
+
+  # Return current username
+  def username
+    return session[:username]
+  end
+
+  def unauthorized!
+    throw :halt, [401, 'Authorization required']
+  end
+
+  def authorized?
+    unauthorized! unless login?
+  end
+
+  def admin?
+    authorized?
+    unauthorized! unless UserDatabase.is_admin?
+  end
+
+end

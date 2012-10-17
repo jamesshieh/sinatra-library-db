@@ -1,8 +1,13 @@
 <html>
   <head>
     <a href="/index">Home</a>
-    <a href="/users/search">Users Search</a>
-    <a href="/books/search">Books Search</a>
+  <% if username.nil? %>
+    <a href="/users/create">Create a New User</a>
+    <a href="/login">Login</a>
+  <% else %>
+    "Welcome "<%= username %>"!"
+    <a href="/logout">Logout</a>
+  <% end %>
   </head>
   <body>
     <%= yield %>

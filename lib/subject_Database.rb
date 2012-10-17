@@ -1,17 +1,23 @@
-class BookDatabase
+class SubjectDatabase
 
-  # List all books and transaction status
+  # List all subjects and transactions
 
   def self.get_catalog
-    @book = Book.includes(:transaction)
-    return @book
+    @subject = Subject.includes(:books)
+    return @subject
   end
 
+
+=begin  not yet converted to subject
   # Create a new book in the user database
 
-  def self.new_book(ti, fn, ln, descr, owner)
-    owner = "Hacker School" if owner == ""
-    @book = Book.create({:author_first_name => fn, :author_last_name => ln, :title => ti, :description => descr, :owner => owner})
+  def self.new_book(ti, fn, ln, descr)
+    @book = Book.create({:author_first_name => fn, :author_last_name => ln, :title => ti, :description => descr})
+    if @book.save!
+      puts "Save Successful"
+    else
+      puts "Save Failed!"
+    end
     return @book
   end
 
@@ -19,6 +25,11 @@ class BookDatabase
 
   def self.edit_book(id, ti, fn, ln)
     @book = Book.update(id, :author_first_name => fn, :author_last_name => ln, :title => ti)
+    if @book.save!
+      puts "Edit Successful!"
+    else
+      puts "Edit Failed!"
+    end
     return @book
   end
 
@@ -44,3 +55,5 @@ class BookDatabase
   end
 
 end
+
+=end
