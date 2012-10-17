@@ -4,6 +4,7 @@ require './db/models'
 require './lib/user_database'
 require './lib/book_database'
 require './lib/transaction_database'
+require 'debugger'
 
 set :database, 'sqlite3:///database.db'
 
@@ -17,13 +18,13 @@ get '/index' do
   if login?
     erb :"index"
   else
-    redirect('/login')
+    redirect to('/login')
   end
 end
 
 get '/login' do
   if login?
-    redirect('/index')
+    redirect to('/index')
   else
     erb :"login"
   end
@@ -31,8 +32,9 @@ end
 
 post '/login' do
   if UserDatabase.authenticate(params[:un], params[:pw])
+    debugger
     session[:username] = params[:un]
-    redirect('/index')
+    redirect to('/index')
   else
     erb :"failedlogin"
   end
@@ -60,13 +62,14 @@ get '/users/create' do
 end
 
 get '/users/delete' do
-  admin?
+  authorized?
   erb :"users/deleteuser"
 end
 
 post '/users/delete' do
+  authorized?
   begin
-    @user = UserDatabase.find_user(params[:email])
+    @user = UserDatabase.find_user(username)
     erb :"users/confirmdelete"
   rescue
     puts "Exception!"
@@ -75,8 +78,9 @@ post '/users/delete' do
 end
 
 post '/users/confirmdelete' do
+  authorized?
   if params[:confirm] == "Yes"
-    UserDatabase.delete_user(params[:id])
+    UserDatabase.delete_user(username)
     puts "User Deleted!"
     redirect to('/index')
   else
@@ -92,19 +96,29 @@ post '/users/create' do
 end
 
 get '/users/edit' do
+  authorized?
   erb :"users/edituser"
 end
 
 post '/users/edit' do
-  @user = UserDatabase.find_user(params[:email])
-  UserDatabase.edit_user(@user.id, params[:first_name], params[:last_name], params[:newemail])
-  @user = User.find(@user.id)
-  erb :"users/showuser"
+  authorized?
+  begin
+    @user = UserDatabase.find_user(username)
+    UserDatabase.edit_user(@user.id, params[:first_name], params[:last_name], params[:newemail])
+    @user = User.find(@user.id)
+    erb :"users/showuser"
+  rescue
+    erb :"users/searcherror"
+  end
 end
 
-post '/users/searchemail' do
-  @user = UserDatabase.find_user(params[:email])
-  erb :"users/showuser"
+post '/users/searchusername' do
+  begin
+    @user = UserDatabase.find_user(params[:un])
+    erb :"users/showuser"
+  rescue
+    erb :"users/searcherror"
+  end
 end
 
 post '/users/searchname' do
@@ -118,30 +132,37 @@ get '/books/list' do
 end
 
 get '/books/new' do
+  authorized?
   erb :"books/newbook"
 end
 
 post '/books/new' do
+  authorized?
   @book = BookDatabase.new_book(params[:ti], params[:fn], params[:ln], params[:descr], params[:owner])
   erb :"books/showbook"
 end
 
 get '/books/search' do
+  authorized?
   erb :"books/searchbook"
 end
 
 post '/books/searchauthor' do
-  @book = BookDatabase.search_book_author(params[:fn], params[:ln])
-  erb :"books/bookindex"
+  begin
+    @book = BookDatabase.search_book_author(params[:fn], params[:ln])
+    erb :"books/bookindex"
+  rescute
+    erb :"books/searcherror"
+  end
 end
 
 post '/books/searchtitle' do
-  @book = BookDatabase.search_book_title(params[:ti])
-  erb :"books/bookindex"
-end
-
-get '/books/edit' do
-  erb :"books/editbook"
+  begin
+    @book = BookDatabase.search_book_title(params[:ti])
+    erb :"books/bookindex"
+  rescue
+    erb :"books/searcherror"
+  end
 end
 
 get '/trans/list' do
@@ -155,21 +176,29 @@ get '/trans/listactive' do
 end
 
 get '/trans/return' do
+  authorized?
   erb :"transactions/return"
 end
 
 post '/trans/return' do
-  @transaction = TransactionDatabase.return_book(params[:ti], params[:em])
-  erb :"transactions/showtrans"
+  begin
+    @transaction = TransactionDatabase.return_book(params[:ti], session[:username])
+    erb :"transactions/showtrans"
+  rescue
+    puts "Exception!"
+    erb :"/transactions/sorrypage"
+  end
 end
 
 get '/trans/checkout' do
+  authorized?
   erb :"transactions/checkout"
 end
 
 post '/trans/checkout' do
   begin
-    @transaction = TransactionDatabase.checkout_book(params[:ti], params[:em])
+    puts session[:username]
+    @transaction = TransactionDatabase.checkout_book(params[:ti], session[:username])
     erb :"transactions/showtrans"
   rescue
     puts "Exception!"
@@ -178,7 +207,7 @@ post '/trans/checkout' do
 end
 
 post '/trans/searchuser' do
-  @transactions = TransactionDatabase.search_user(params[:em])
+  @transactions = TransactionDatabase.search_user(params[:un])
   erb :"/transactions/transindex"
 end
 

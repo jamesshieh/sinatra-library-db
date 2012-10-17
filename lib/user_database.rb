@@ -9,11 +9,6 @@ class UserDatabase
     pw_salt = BCrypt::Engine.generate_salt
     pw_hash = BCrypt::Engine.hash_secret(pw, pw_salt)
     @user = User.create({:first_name => fn, :last_name => ln, :email => em, :username => un, :password => pw_hash, :salt => pw_salt})
-    if @user.save!
-      puts "Save Successful"
-    else
-      puts "Save Failed!"
-    end
   end
 
   # Authentication
@@ -50,13 +45,15 @@ class UserDatabase
 
   # Find ID of user by email
 
-  def self.find_user(em)
-    @user = User.find(:first, :conditions => ["email = ?", em])
+  def self.find_user(un)
+    @user = User.find(:first, :conditions => ["username = ?", un])
     return @user
   end
 
-  def self.delete_user(id)
-    @user = User.destroy(id)
+  # Delete user
+
+  def self.delete_user(un)
+    @user = User.destroy(:first, :conditions => ["username = ?", un])
   end
 
 end
