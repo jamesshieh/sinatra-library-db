@@ -41,14 +41,16 @@ post '/login' do
   end
   if auth_response.code == "200"
     user_info = JSON.parse(auth_response.body)
-    user = UserDatabase.find_by_hs_id(user_info[:hs_id])
+    user = User.find_by_hs_id(user_info["hs_id"].to_s)
     user = User.new unless user
     user.hs_id = user_info["hs_id"]
     user.first_name = user_info["first_name"]
     user.last_name = user_info["last_name"]
     user.email = params[:email]
+    debugger
     if user.save
       session[:id] = user.id
+      redirect to('/index')
     else
       redirect to('/login')
     end
@@ -215,16 +217,15 @@ helpers do
 
   # Check if logged in
   def login?
-    if session[:username].nil?
-      return false
-    else
-      return true
-    end
+    true unless session[:id].nil?
   end
 
-  # Return current username
-  def username
-    return session[:username]
+  def current_user
+    if login?
+      User.find(session[:id])
+    else
+      nil
+    end
   end
 
   def unauthorized!

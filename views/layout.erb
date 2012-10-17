@@ -1,11 +1,11 @@
 <html>
   <head>
     <a href="/index">Home</a>
-  <% if username.nil? %>
+  <% unless current_user %>
     <a href="/users/create">Create a New User</a>
     <a href="/login">Login</a>
   <% else %>
-    "Welcome "<%= username %>"!"
+    "Welcome "<%= current_user.email %>"!"
     <a href="/logout">Logout</a>
   <% end %>
   </head>
